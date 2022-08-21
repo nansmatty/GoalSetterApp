@@ -2,6 +2,9 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/UserModel");
+const {
+	generateToken,
+} = require("../utils/generateToken");
 
 // @access Public
 // @desc  REGISTER USER
@@ -40,6 +43,7 @@ exports.registerUser = asyncHandler(
 			name,
 			email,
 			password: hashedPassword,
+			token: generateToken(user._id),
 		});
 
 		if (user) {
@@ -74,6 +78,7 @@ exports.loginUser = asyncHandler(
 				_id: user.id,
 				name: user.name,
 				email: user.email,
+				token: generateToken(user._id),
 			});
 		} else {
 			res.status(400);
@@ -86,5 +91,14 @@ exports.loginUser = asyncHandler(
 // @desc  GET USER
 // @route POST /api/users/me
 exports.getUser = asyncHandler(
-	async (req, res) => {}
+	async (req, res) => {
+		const { _id, email, name } =
+			await User.findById(req.user.id);
+
+		res.status(200).json({
+			_id,
+			name,
+			email,
+		});
+	}
 );
