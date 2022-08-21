@@ -4,7 +4,7 @@ const Goal = require("../models/GoalModel");
 // @access Private
 // @desc  GET GOALS
 // @route GET /api/goals
-export const getGoals = asyncHandler(
+exports.getGoals = asyncHandler(
 	async (req, res) => {
 		const goals = await Goal.find();
 		res.status(200).json(goals);
@@ -14,7 +14,7 @@ export const getGoals = asyncHandler(
 // @desc  SET GOAL
 // @route POST /api/goals
 // @access Private
-export const setGoal = asyncHandler(
+exports.setGoal = asyncHandler(
 	async (req, res) => {
 		const goal = await Goal.create({
 			text: req.body.text,
@@ -27,7 +27,7 @@ export const setGoal = asyncHandler(
 // @desc  UPDATE GOAL
 // @route PUT /api/goals/:id
 // @access Private
-export const updateGoal = asyncHandler(
+exports.updateGoal = asyncHandler(
 	async (req, res) => {
 		const goal = await Goal.findById(
 			req.params.id
@@ -54,7 +54,7 @@ export const updateGoal = asyncHandler(
 // @desc  DELETE GOAL
 // @route DELETE /api/goals/:id
 // @access Private
-export const deleteGoal = asyncHandler(
+exports.deleteGoal = asyncHandler(
 	async (req, res) => {
 		const goal = await Goal.findById(
 			req.params.id
