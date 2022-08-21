@@ -1,12 +1,15 @@
 const asyncHandler = require("express-async-handler");
 const Goal = require("../models/GoalModel");
+const User = require("../models/UserModel");
 
 // @access Private
 // @desc  GET GOALS
 // @route GET /api/goals
 exports.getGoals = asyncHandler(
 	async (req, res) => {
-		const goals = await Goal.find();
+		const goals = await Goal.find({
+			user: req.user.id,
+		});
 		res.status(200).json(goals);
 	}
 );
@@ -17,6 +20,7 @@ exports.getGoals = asyncHandler(
 exports.setGoal = asyncHandler(
 	async (req, res) => {
 		const goal = await Goal.create({
+			user: req.user.id,
 			text: req.body.text,
 		});
 
@@ -36,6 +40,18 @@ exports.updateGoal = asyncHandler(
 		if (!goal) {
 			res.status(400);
 			throw new Error("Goal not found");
+		}
+
+		const user = await User.findById(req.user.id);
+
+		if (!user) {
+			res.status(401);
+			throw new Error("User not found");
+		}
+
+		if (goal.user.toString() !== user.id) {
+			res.status(401);
+			throw new Error("User not authorized");
 		}
 
 		const updatedGoal =
@@ -59,6 +75,18 @@ exports.deleteGoal = asyncHandler(
 		const goal = await Goal.findById(
 			req.params.id
 		);
+
+		const user = await User.findById(req.user.id);
+
+		if (!user) {
+			res.status(401);
+			throw new Error("User not found");
+		}
+
+		if (goal.user.toString() !== user.id) {
+			res.status(401);
+			throw new Error("User not authorized");
+		}
 
 		if (!goal) {
 			res.status(400);
