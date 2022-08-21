@@ -10,24 +10,28 @@ exports.getGoals = asyncHandler(
 		const goals = await Goal.find({
 			user: req.user.id,
 		});
+
 		res.status(200).json(goals);
 	}
 );
-
 // @desc  SET GOAL
 // @route POST /api/goals
 // @access Private
 exports.setGoal = asyncHandler(
 	async (req, res) => {
+		if (!req.body.text) {
+			res.status(400);
+			throw new Error("Please add a text field");
+		}
+
 		const goal = await Goal.create({
-			user: req.user.id,
 			text: req.body.text,
+			user: req.user.id,
 		});
 
 		res.status(200).json(goal);
 	}
 );
-
 // @desc  UPDATE GOAL
 // @route PUT /api/goals/:id
 // @access Private
