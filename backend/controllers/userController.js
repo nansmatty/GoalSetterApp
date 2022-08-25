@@ -92,13 +92,6 @@ exports.loginUser = asyncHandler(
 // @route POST /api/users/me
 exports.getUser = asyncHandler(
 	async (req, res) => {
-		const { _id, email, name } =
-			await User.findById(req.user.id);
-
-		res.status(200).json({
-			_id,
-			name,
-			email,
-		});
+		res.status(200).json(req.user);
 	}
 );
