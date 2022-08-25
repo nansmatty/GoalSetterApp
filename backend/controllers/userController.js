@@ -43,7 +43,6 @@ exports.registerUser = asyncHandler(
 			name,
 			email,
 			password: hashedPassword,
-			token: generateToken(user._id),
 		});
 
 		if (user) {
@@ -51,6 +50,7 @@ exports.registerUser = asyncHandler(
 				_id: user.id,
 				name: user.name,
 				email: user.email,
+				token: generateToken(user._id),
 			});
 		} else {
 			res.status(400);
